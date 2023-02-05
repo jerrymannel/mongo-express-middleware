@@ -74,7 +74,7 @@ Query a collection with a given `filter` which is set as URL params. This simula
 
 Returns an array of JSONs or an empty array
 
-> Filter expressions are similar to MongoDB [Query and Projection Operators
+> Filter and select expressions are similar to MongoDB [Query and Projection Operators
 ](https://www.mongodb.com/docs/manual/reference/operator/query/).
 
 ### How `page` param works
