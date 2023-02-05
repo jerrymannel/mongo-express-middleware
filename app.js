@@ -7,19 +7,18 @@ const lib = require("./lib.js");
 async function find(req, res) {
 	try {
 		let filter = lib.getFilter(this.options.defaultFilter, req.query.filter);
-		console.log(filter);
 		let findOptions = {
 			limit: req.query.limit ? parseInt(req.query.limit) : 10,
 		};
 		let page = req.query.page > 0 ? parseInt(req.query.page) : 1;
-		findOptions.skip = findOptions.limit * page;
+		findOptions.skip = findOptions.limit * (page - 1);
 		findOptions.sort = lib.getObject(req.query.sort);
 		findOptions.projection = lib.getObject(req.query.select);
 		let cursor = await this.collection.find(filter, findOptions);
 		let results = await cursor.toArray();
 		res.status(200).json(results);
 	} catch (e) {
-		res.status(500).json({ message: e.message })
+		res.status(500).json({ message: e.message });
 	}
 };
 
@@ -28,7 +27,7 @@ async function findById(req, res) {
 		if (!req.params.id) return res.status(400).json({ message: "Missing id" });
 		let filter = {
 			"_id": req.params.id
-		}
+		};
 		let isObjectId = req.query.isObjectId ? true : false;
 		if (isObjectId) filter._id = new ObjectId(req.params.id);
 		let results = await this.collection.findOne(filter, {
