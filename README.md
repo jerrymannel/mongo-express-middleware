@@ -39,6 +39,7 @@ app.listen(3000, () => {
 
 - [mongo-express-middleware](#mongo-express-middleware)
 - [Usage](#usage)
+- [Install](#install)
 - [Documentation](#documentation)
 	- [find(req, res)](#findreq-res)
 		- [Response](#response)
@@ -55,6 +56,11 @@ app.listen(3000, () => {
 	- [deleteMany(req, res)](#deletemanyreq-res)
 	- [deleteById(req, res)](#deletebyidreq-res)
 
+# Install
+
+```sh
+npm i @jerrymannel/mongo-express-middleware
+```
 
 # Documentation
 
