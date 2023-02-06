@@ -60,15 +60,15 @@ app.listen(3000, () => {
 
 ## find(req, res)
 
-Query a collection with a given `filter` which is set as URL params. This simulates the Mongodb [find](https://www.mongodb.com/docs/v6.0/reference/command/find/) operation.
+Query a collection with a given `filter`, which is send as URL params. This simulates the Mongodb [find](https://www.mongodb.com/docs/v6.0/reference/command/find/) operation.
 
 | Query | Type | Description | e.g. |
 |--|--|--|--|
 | filter | `Object` | Apply a filter for retrieving data. Accepts any valid MongoDB filter expression. | `{"buying_price": {"$ne": 100}}` |
-| select | `Object` | Select the attribues you want to retrieve. If `select` is not set then the whole document is retrieved. Accepts any valid MOngoDB projection expression | `{"amount":1, "units":1, "name":1}` |
+| select | `Object` | Select the attributes you want to retrieve. If `select` is not set, then the whole document is retrieved. Accepts any valid MOngoDB projection expression | `{"amount":1, "units":1, "name":1}` |
 | sort | `Object` | Sorts the data. Accepts MongoDB sort syntax | `{"name":-1}` |
 | limit | `Number` | The maximum number of documents to return. If unspecified, then defaults to 10 | 
-| page | `Number` | Page based on the limit specifed.  | 
+| page | `Number` | Page based on the limit specified.  | 
 
 ### Response
 
@@ -100,7 +100,7 @@ Returns a single JSON.
 
 You can create two documents in MongoDB with the same `_id` where one is of type `string` and the other of type `ObjectId`.
 
-When you create a document using the [create(req, res)](#createreq-res), you can set the `_id` of the document. If the `isObjectId` param is not set for `create` then the user specified `_id` is set as type string.
+When you create a document using the [create(req, res)](#createreq-res), you can set the `_id` of the document. If the `isObjectId` param is not set for `create` then the user-specified `_id` is set as type string.
 
 Hence, I have made provision under `findById(req, res)` to query documents where `_id` can be of either type.
 
