@@ -1,5 +1,5 @@
 {
-  "name": "mongo-express-middleware",
+  "name": "@jerrymannel/mongo-express-middleware",
   "version": "1.0.0",
   "description": "Express middleware that will give you readymade CRUD APIs on MongoDB",
   "main": "app.js",
