@@ -149,6 +149,17 @@ async function deleteById(req, res) {
 	}
 }
 
+async function aggregate(req, res) {
+	try {
+		let pipeline = req.body;
+		let cursor = await this.collection.aggregate(pipeline);
+		let aggregateResult = await cursor.toArray();
+		res.status(200).json(aggregateResult)
+	} catch (e) {
+		res.status(500).json({ message: e.message })
+	}
+}
+
 let mongoCrud = function (collection, options) {
 	this.collection = collection;
 	this.options = options ? options : {};
@@ -161,6 +172,7 @@ let mongoCrud = function (collection, options) {
 	this.update = update.bind(this);
 	this.deleteById = deleteById.bind(this);
 	this.deleteMany = deleteMany.bind(this);
+	this.aggregate = aggregate.bind(this);
 }
 
 mongoCrud.prototype = {

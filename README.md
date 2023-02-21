@@ -9,7 +9,7 @@ const { MongoClient } = require("mongodb");
 const express = require('express');
 const app = express();
 
-const MongoExpressMiddleware = require('mongo-express-middleware');
+const MongoExpressMiddleware = require('@jerrymannel/mongo-express-middleware');
 
 const uri = "mongodb://localhost:27017";
 
@@ -30,6 +30,7 @@ app.post('/', crud.create);
 app.put('/:id', crud.update);
 app.delete('/', crud.deleteMany);
 app.delete('/:id', crud.deleteById);
+app.post('/utils/aggregate', crud.aggregate);
 
 
 app.listen(3000, () => {
@@ -55,6 +56,7 @@ app.listen(3000, () => {
 		- [Response](#response-4)
 	- [deleteMany(req, res)](#deletemanyreq-res)
 	- [deleteById(req, res)](#deletebyidreq-res)
+	- [aggregate(req, res)](#aggregatereq-res)
 
 # Install
 
@@ -186,3 +188,9 @@ Accepts `filter` as a query param. Refer `filter` documentation under [find](#fi
 Deletes a single document with the `_id` that matches `req.params.id`.
 
 Accepts `isObjectId` as a query param. Refer `isObjectId` documentation under [findById](#findbyidreq-res)
+
+## aggregate(req, res)
+
+Input - [MongoDB aggregation pipeline](https://www.mongodb.com/docs/manual/core/aggregation-pipeline/)
+
+Returns the result of running the MongoDB aggregation pipeline.
