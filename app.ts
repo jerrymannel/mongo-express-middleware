@@ -7,9 +7,9 @@ import {
   ObjectId,
   Sort,
 } from 'mongodb';
-import { RequestHandler } from 'express';
 
-import lib from './lib.js';
+import { RequestHandler } from 'express';
+import lib from './lib';
 
 export interface Options {
   defaultFilter?: Filter<Document>;
