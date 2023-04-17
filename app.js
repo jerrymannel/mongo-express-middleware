@@ -91,36 +91,72 @@ async function create(req, res) {
 
 async function update(req, res) {
 	if (!req.body || req.body == {}) return res.status(400).json({ message: "Missing payload" });
-
 	let isObjectId = req.query.isObjectId ? true : false;
-
-	let filter = {
-		"_id": req.params.id
-	}
-	if (isObjectId) filter._id = new ObjectId(req.params.id);
-
 	let isReplace = req.query.replace ? true : false;
 	const options = {
 		upsert: req.query.upsert ? true : false
 	};
+	if(Array.isArray(req.body) &&  req.params.id) return res.status(400).json({err_request:"For single update pass id in url param with payload object and for multiple updates pass only payload object array with ids inside the payload"})
+	
+	if(Array.isArray(req.body)){
+		let idMissing = [];
+		let updateData = [];
+		req.body.forEach(eachBody => {
+			if(!eachBody._id){
+				idMissing.push(eachBody);
+				return;
+			}
+			let id = eachBody._id;
+			let updates = eachBody;
+			delete updates._id;
+			
+			if (isObjectId) id = new ObjectId(id);
 
-	let doc = req.body;
-	let result = null;
-	if (doc._id) delete doc._id;
-	if (isReplace) {
-		result = await this.collection.findOneAndReplace(filter, doc, options);
-	} else {
-		doc = {
-			"$set": doc
+			if (isReplace) {
+				updateData.push( { replaceOne: {
+					filter: { _id:  id},
+					replacement: {  ...updates }
+				 } });
+			}else{
+				updateData.push( { updateOne: {
+					filter: { _id:  id},
+					update: { $set: updates }
+				 } });
+			}
+		});
+		
+		if(updateData.length == 0) return res.status(404).json({ message: "_id is mandatory for updating" });
+		
+		let result = await this.collection.bulkWrite(updateData);
+		if (idMissing.length > 0) result.missing_id = idMissing;
+
+		res.status(200).json(result);
+
+	}else{
+
+		let filter = {
+			"_id": req.params.id
 		}
-		result = await this.collection.findOneAndUpdate(filter, doc, options);
+		if (isObjectId) filter._id = new ObjectId(req.params.id);
+
+		let doc = req.body;
+		let result = null;
+		if (doc._id) delete doc._id;
+		if (isReplace) {
+			result = await this.collection.findOneAndReplace(filter, doc, options);
+		} else {
+			doc = {
+				"$set": doc
+			}
+			result = await this.collection.findOneAndUpdate(filter, doc, options);
+		}
+
+
+		if (result.matchedCount == 0) return res.status(404).json({ message: "Document not found" });
+		if (result.modifiedCount == 0) return res.status(304).json({ message: "Document not modified" });
+
+		res.status(200).json({ _id: req.params.id });
 	}
-
-
-	if (result.matchedCount == 0) return res.status(404).json({ message: "Document not found" });
-	if (result.modifiedCount == 0) return res.status(304).json({ message: "Document not modified" });
-
-	res.status(200).json({ _id: req.params.id });
 
 }
 
