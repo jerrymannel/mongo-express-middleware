@@ -1,0 +1,7 @@
+.editorconfig
+.prettierrc
+.gitignore
+.vscode
+app.ts
+lib.ts
+tsconfig.json
